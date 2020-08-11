@@ -1,5 +1,7 @@
 
 const multer = require('multer')
+const jwt = require("jsonwebtoken")
+const KEY = 'tU@n KHaI !(9*';
 
 
 const Storage = multer.diskStorage({
@@ -11,7 +13,42 @@ const Storage = multer.diskStorage({
     },
 })
 
-const upload = multer({ dest: './images' })
+const upload = multer({
+    storage: Storage
+})
+
+
+let { checkToken } = require('../TokenMiddlaware/checkToken.middleware')
+
+// const checkToken = (req, res, next) => {
+//     let authorize_token = req.get('Authorization');
+//     let jwt_token = "";
+
+//     if (authorize_token === undefined) {
+//         res.status(401);
+//         res.send("JWT does not exist");
+//         return;
+
+//     } else if (authorize_token.startsWith("Bearer ")) {
+//         jwt_token = authorize_token.substring(7);
+//     } else {
+//         res.status(401);
+//         res.send("JWT does not begin with Bearer")
+//         return;
+//     }
+//     try {
+//         let payload = jwt.verify(jwt_token, KEY);
+//         console.log('payload', jwt.verify(jwt_token, KEY))
+//         if (payload.type !== 'access')
+//             throw " invalid JWT token"
+//         req.token = jwt_token;
+//         next();
+//     } catch (error) {
+//         console.log(error)
+//         res.status(401);
+//         res.send("invalid JWT token")
+//     }
+// }
 
 
 'use strict';
@@ -24,22 +61,30 @@ module.exports = function (app) {
 
     // ---------------product------------------
     app.route('/rooms')
-        .get(productsCtrl.get)
+        .get(checkToken, productsCtrl.get)
         .post(productsCtrl.getAround);
 
-    app.route('/rooms/:roomId')
-        .get(productsCtrl.detail)
-        .put(productsCtrl.update)
-        .delete(productsCtrl.delete);
+    app.route('/rooms/:roomID')
+        .get(checkToken, productsCtrl.detail);
+
+    app.route('/rents')
+        .post(checkToken, upload.array('rooms', 12), productsCtrl.store);
+
+    app.route('/rents/:userID')
+        .get(checkToken, productsCtrl.getRent);
+
+    app.route('/rents/:roomID')
+        .put(checkToken, productsCtrl.update)
+        .delete(checkToken, productsCtrl.delete);
 
 
     // ---------------like------------------
 
     app.route('/like')
-        .post(likeCtrl.store);
+        .post(checkToken, likeCtrl.store);
 
-    app.route('/like/:userId')
-        .post(likeCtrl.delete)
+    app.route('/like/:userID')
+        .post(checkToken, likeCtrl.delete)
         .get(likeCtrl.get);
 
     // ---------------user------------------
@@ -49,21 +94,18 @@ module.exports = function (app) {
         .post(userCtrl.createUser);
 
     app.route('/user/:id')
-        .post(userCtrl.update);
+        .post(checkToken, userCtrl.update);
 
 
-    app.route('/login')
-        .post(userCtrl.getByName);
+    // app.route('/login')
+    //     .post(userCtrl.getByName);
 
     //--------------upload-----------------
 
     app.route('/upload/:image')
-        .get(uploadCtrl.getAvatar);
+        .get(uploadCtrl.getImage);
 
     app.route('/upload/avatar')
-        .post(upload.single('avatar'), uploadCtrl.avatar);
-
-    app.route('/upload/room')
-        .post(upload.array('rooms', 12), uploadCtrl.room);
+        .post(checkToken, upload.single('avatar'), uploadCtrl.avatar);
 
 };

@@ -2,7 +2,8 @@ const db = require('../../db')
 
 module.exports = {
     get: (req, res) => {
-        let id_user = req.params.userId;
+        let id_user = req.params.userID;
+        console.log(id_user)
         let sql = 'SELECT * FROM `like` INNER JOIN roomView ON like.id_room = roomView.id WHERE id_user=?'
         db.query(sql, [id_user], (err, response) => {
             if (err) throw err
@@ -22,6 +23,7 @@ module.exports = {
 
     store: (req, res) => {
         let data = { ...req.body }
+        console.log(data)
         let sql = "INSERT INTO `like` SET ?"
         db.query(sql, [data], (err, response) => {
             if (err) throw err

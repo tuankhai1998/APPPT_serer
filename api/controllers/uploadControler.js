@@ -5,10 +5,9 @@ const fs = require('fs');
 module.exports = {
     avatar: (req, res) => {
         const user = { ...req.body };
-        console.log(req)
-        console.log('file', req.file)
+        // console.log('file', req.file)
         let sql = 'UPDATE `user` SET `avatar` = ? WHERE `user`.`id` = ?';
-        db.query(sql, [req.file.filename, user.userid], (err, response) => {
+        db.query(sql, [req.file.filename, user.userID], (err, response) => {
             if (err) throw err
             res.status(200).json({
                 message: 'success!',
@@ -17,7 +16,7 @@ module.exports = {
         })
     },
 
-    getAvatar: (req, res) => {
+    getImage: (req, res) => {
         let { image } = req.params;
         let patch = './images/' + `${image}`;
         fs.readFile(patch, (err, imageData) => {

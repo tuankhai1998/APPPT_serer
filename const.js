@@ -1,0 +1,1 @@
+module.exports.KEY = 'tU@n KHaI !(9*';

@@ -5,7 +5,8 @@ const db = mysql.createConnection({
     host: "localhost",
     user: "root",
     password: "",
-    database: "APPPT"
+    database: "APPPT",
+    multipleStatements: true
 });
 
 
