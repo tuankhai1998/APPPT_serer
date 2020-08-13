@@ -5,7 +5,6 @@ const data = 0;
 
 module.exports = {
     get: (req, res) => {
-        console.log(req.token)
         let sql = 'SELECT * FROM roomView'
         db.query(sql, (err, response) => {
             if (err) throw err

@@ -22,7 +22,6 @@ module.exports = {
 
     createUser: (req, res) => {
         let data = req.body;
-        console.log(data)
         let sql = 'INSERT INTO user SET ?'
         db.query(sql, [data], (err, response) => {
             if (err) throw err

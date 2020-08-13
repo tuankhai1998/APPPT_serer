@@ -3,7 +3,6 @@ const db = require('../../db')
 module.exports = {
     get: (req, res) => {
         let id_user = req.params.userID;
-        console.log(id_user)
         let sql = 'SELECT * FROM `like` INNER JOIN roomView ON like.id_room = roomView.id WHERE id_user=?'
         db.query(sql, [id_user], (err, response) => {
             if (err) throw err
@@ -14,16 +13,16 @@ module.exports = {
 
     delete: (req, res) => {
         let { id_user, id_room, index } = req.body
+        console.log(id_user, id_room)
         let sql = 'DELETE FROM `like` WHERE id_room = ? AND id_user = ? '
         db.query(sql, [id_room, id_user], (err, response) => {
             if (err) throw err
-            res.json({ message: 'Delete success!' })
+            res.json(index)
         })
     },
 
     store: (req, res) => {
         let data = { ...req.body }
-        console.log(data)
         let sql = "INSERT INTO `like` SET ?"
         db.query(sql, [data], (err, response) => {
             if (err) throw err

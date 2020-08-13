@@ -31,8 +31,7 @@ module.exports.isAuthorized = (req, res, next) => {
                 res.json({ ...response[0], token })
             }
             else {
-                res.status(401);
-                res.send("invalid user")
+                res.json([])
             }
         })
     }
